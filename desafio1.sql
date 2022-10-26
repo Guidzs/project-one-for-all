@@ -3,9 +3,8 @@ DROP DATABASE IF EXISTS SpotifyClone;
 CREATE DATABASE SpotifyClone;
 
 CREATE TABLE SpotifyClone.artists(
-	artist_id INT AUTO_INCREMENT,
-    artist_name VARCHAR(70) NOT NULL,
-    CONSTRAINT PRIMARY KEY (artist_id, artist_name)
+	artist_id INT PRIMARY KEY AUTO_INCREMENT,
+    artist_name VARCHAR(70) NOT NULL
 ) engine = InnoDB;
 
 CREATE TABLE SpotifyClone.albuns(
@@ -18,11 +17,10 @@ CREATE TABLE SpotifyClone.albuns(
 ) engine = InnoDB;
 
 CREATE TABLE SpotifyClone.musics(
-	music_id INT AUTO_INCREMENT,
+	music_id INT PRIMARY KEY AUTO_INCREMENT,
     music_name VARCHAR(100) NOT NULL,
     time_seconds INT NOT NUll,
     album_id INT NOT NULL,
-    CONSTRAINT PRIMARY KEY (music_id, music_name),
     FOREIGN KEY (album_id)
 		REFERENCES albuns (album_id)
 ) engine = InnoDB;
@@ -46,22 +44,24 @@ CREATE TABLE SpotifyClone.users(
 CREATE TABLE SpotifyClone.following(
 	follow_id INT PRIMARY KEY AUTO_INCREMENT,
     user_id INT NOT NULL,
+    artist_id INT NOT NULL,
     artist_name VARCHAR(70) NOT NULL,
     FOREIGN KEY (user_id)
 		REFERENCES users (user_id),
-	FOREIGN KEY (artist_name)
-		REFERENCES artists (artist_name)
+	FOREIGN KEY (artist_id)
+		REFERENCES artists (artist_id)
 ) engine = InnoDB;
 
 CREATE TABLE SpotifyClone.history_reproductions(
 	history_id INT PRIMARY KEY AUTO_INCREMENT,
     user_id INT NOT NULL,
+    music_id INT NOT NULL,
     music_name VARCHAR(100) NOT NULL,
     date_reproductions DATETIME NOT NULL,
     FOREIGN KEY (user_id)
 		REFERENCES users (user_id),
-	FOREIGN KEY (music_name)
-		REFERENCES musics (music_name)
+	FOREIGN KEY (music_id)
+		REFERENCES musics (music_id)
 ) engine = InnoDB;
 
 INSERT INTO SpotifyClone.artists (artist_name)
@@ -117,38 +117,39 @@ VALUES
   ('Judith Butler', 45, 3 , 2020-05-13),
   ('Jorge Amado', 58, 3 , 2017-02-17);
 
-INSERT INTO SpotifyClone.following (user_id, artist_name)
+INSERT INTO SpotifyClone.following (user_id, artist_id, artist_name)
 VALUES
-  (1, 'Beyoncé'),
-  (1, 'Queen'),
-  (1, 'Elis Regina'),
-  (2, 'Beyoncé'),
-  (2, 'Elis Regina'),
-  (3, 'Queen'),
-  (4, 'Baco Exu do Blues'),
-  (5, 'Blind Guardian'),
-  (5, 'Nina Simone'),
-  (6, 'Nina Simone'),
-  (6, 'Beyoncé'),
-  (7, 'Nina Simone'),
-  (9, 'Elis Regina'),
-  (10, 'Queen');
+  (1, 1, 'Beyoncé'),
+  (1, 2, 'Queen'),
+  (1, 3, 'Elis Regina'),
+  (2, 1, 'Beyoncé'),
+  (2, 3, 'Elis Regina'),
+  (3, 2, 'Queen'),
+  (4, 4, 'Baco Exu do Blues'),
+  (5, 5, 'Blind Guardian'),
+  (5, 6, 'Nina Simone'),
+  (6, 6, 'Nina Simone'),
+  (6, 1, 'Beyoncé'),
+  (7, 6, 'Nina Simone'),
+  (9, 3, 'Elis Regina'),
+  (10, 2, 'Queen');
   
-INSERT INTO SpotifyClone.history_reproductions (user_id, music_name, date_reproductions)
+  
+INSERT INTO SpotifyClone.history_reproductions (user_id, music_id, music_name, date_reproductions)
 VALUES
-  (1, 'Samba em Paris', '2022-02-28 10:45:55'),
-  (1, 'VIRGO’S GROOVE', '2020-05-02 05:30:35'),
-  (1, 'Feeling Good', '2020-03-06 11:22:33'),
-  (2, 'Feeling Good', '2022-08-05 08:05:17'),
-  (2, 'O Medo de Amar é o Medo de Ser Livre', '2020-01-02 07:40:33'),
-  (3, 'Feeling Good', '2020-11-13 16:55:13'),
-  (3, 'VIRGO’S GROOVE', '2020-12-05 18:38:30'),
-  (4, 'Samba em Paris', '2021-08-15 17:10:10'),
-  (5, 'Samba em Paris', '2022-01-09 01:44:33'),
-  (5, 'Under Pressure', '2020-08-06 15:23:43'),
-  (6, 'O Medo de Amar é o Medo de Ser Livre', '2017-01-24 00:31:17'),
-  (6, 'BREAK MY SOUL', '2017-10-12 12:35:20'),
-  (7, 'Don’t Stop Me Now', '2011-12-15 22:30:49'),
-  (8, 'Don’t Stop Me Now', '2012-03-17 14:56:41'),
-  (9, 'The Bard’s Song', '2022-02-24 21:14:22'),
-  (10, 'ALIEN SUPERSTAR', '2015-12-13 08:30:22');
+  (1, 8, 'Samba em Paris', '2022-02-28 10:45:55'),
+  (1, 2, 'VIRGO’S GROOVE', '2020-05-02 05:30:35'),
+  (1, 10, 'Feeling Good', '2020-03-06 11:22:33'),
+  (2, 10, 'Feeling Good', '2022-08-05 08:05:17'),
+  (2, 7, 'O Medo de Amar é o Medo de Ser Livre', '2020-01-02 07:40:33'),
+  (3, 10, 'Feeling Good', '2020-11-13 16:55:13'),
+  (3, 2, 'VIRGO’S GROOVE', '2020-12-05 18:38:30'),
+  (4, 8, 'Samba em Paris', '2021-08-15 17:10:10'),
+  (5, 8, 'Samba em Paris', '2022-01-09 01:44:33'),
+  (5, 5, 'Under Pressure', '2020-08-06 15:23:43'),
+  (6, 7, 'O Medo de Amar é o Medo de Ser Livre', '2017-01-24 00:31:17'),
+  (6, 1, 'BREAK MY SOUL', '2017-10-12 12:35:20'),
+  (7, 4, 'Don’t Stop Me Now', '2011-12-15 22:30:49'),
+  (8, 4, 'Don’t Stop Me Now', '2012-03-17 14:56:41'),
+  (9, 9, 'The Bard’s Song', '2022-02-24 21:14:22'),
+  (10, 3, 'ALIEN SUPERSTAR', '2015-12-13 08:30:22');
